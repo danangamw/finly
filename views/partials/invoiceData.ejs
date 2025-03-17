@@ -1,0 +1,119 @@
+<section class="w-full">
+  <div class="flex w-full items-center justify-between gap-2 md:mt-8">
+    <h1 class="text-2xl"><%= title %></h1>
+  </div>
+
+  <form>
+    <div class="mt-4 flex items-center justify-between gap-2 md:mt-8">
+      <div class="relative flex flex-1 flex-shrink-0">
+        <label
+          for="search"
+          class="input input-bordered flex items-center gap-2 w-full"
+        >
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            id="search"
+            name="search"
+            class="grow"
+            placeholder="Search Invoices..."
+          />
+        </label>
+      </div>
+
+      <a
+        href="invoices/create"
+        class="btn btn-primary"
+      >
+        <i class="fa-solid fa-plus fa-lg mr-2"></i>
+        New Invoice
+      </a>
+    </div>
+  </form>
+
+  <section class="mt-6 overflow-x-auto bg-white rounded-lg p-2">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Customer Name</th>
+          <th>Amount</th>
+          <th>Due Date</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% invoices.forEach(function(invoice) { %>
+        <tr>
+          <td><%= invoice.customer.name %></td>
+          <td><%= IDRupiah.format(invoice.amount) %></td>
+          <td><%= new Date(invoice.date).toLocaleDateString('id-ID') %></td>
+          <td>
+            <% if (invoice.status === 'paid') { %>
+            <span
+              class="ml-2 badge badge-sm badge-success p-3 gap-3 text-white"
+            >
+              Paid <i class="fa-regular fa-circle-check"></i>
+            </span>
+            <% } else { %>
+            <span class="ml-2 badge-sm badge-ghost p-3 gap-3"
+              >Pending <i class="fa-regular fa-clock"></i
+            ></span>
+            <% } %>
+          </td>
+          <td>
+            <div class="flex justify-end gap-3">
+              <a
+                href="invoices/<%= invoice._id %>/edit"
+                class="rounded-md border p-2 hover:bg-gray-100"
+              >
+                <i class="fa-solid fa-pen-to-square fa-lg"></i>
+              </a>
+
+              <button
+                class="rounded-md border p-2 hover:bg-gray-100 text-red-500"
+                onclick="deleteModal('<%= invoice._id %>')"
+              >
+                <span class="sr-only">Delete</span>
+                <i class="fa-solid fa-trash fa-lg"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </section>
+</section>
+
+<dialog
+  id="delete-modal"
+  class="modal"
+>
+  <div class="modal-box">
+    <h3 class="font-bold text-lg">Are you sure?</h3>
+    <p class="py-4">The invoice will be deleted</p>
+    <div class="modal-action">
+      <form
+        id="delete-form"
+        method="post"
+      >
+        <button class="btn btn-danger">Yes</button>
+      </form>
+
+      <form method="dialog">
+        <button class="btn">Cancel</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  function deleteModal(invoiceId) {
+    const modal = document.querySelector('#delete-modal');
+    const deleteForm = document.querySelector('#delete-form');
+    deleteForm.setAttribute('action', `invoices/${invoiceId}/delete`);
+    modal.showModal();
+  }
+</script>
