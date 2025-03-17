@@ -28,7 +28,7 @@ Make sure you have the following installed:
 1. Clone this repository:
 
    ```sh
-   git clone https://github.com/yourusername/nodejs-mvc-app.git
+   git clone https://github.com/danangamw/finly.git
    cd nodejs-mvc-app
    ```
 
